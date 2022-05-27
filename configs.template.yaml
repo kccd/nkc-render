@@ -1,0 +1,13 @@
+render:
+  cache: true
+moleculer:
+  namespace: 'NKC_MESH_PRODUCTION'
+  nodeID: 'NKC_RENDER'
+  transporter: 'redis://127.0.0.1:6379'
+  registry:
+    strategy: 'Random'
+    discoverer: 'Local'
+  web:
+    enabled: false
+    port: 20397
+    host: '127.0.0.1'
