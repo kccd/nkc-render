@@ -2,6 +2,7 @@ import {renderFile} from 'pug';
 import {AccessFile} from '../modules/file';
 import {GetRenderConfigs} from '../modules/configs';
 import {HttpErrorCodes, HttpErrorTypes, ThrowHttpError} from '../modules/error';
+import hexToRgba from 'hex-to-rgba';
 const renderConfigs = GetRenderConfigs();
 import moment from 'moment';
 
@@ -14,6 +15,34 @@ function format(type: string, time: Date | number) {
 function timeFormat(time: Date | number) {
   const type = 'YYYY/MM/DD HH:mm:ss';
   return format(type, time);
+}
+
+function briefTime(toc: Date) {
+  const now = new Date();
+  const nowNumber = now.getTime();
+  const time = new Date(toc);
+  const timeNumber = time.getTime();
+  // 1h
+  if (nowNumber - timeNumber <= 60 * 60 * 1000) {
+    return '刚刚';
+  }
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const oneDayNumber = 24 * 60 * 60 * 1000;
+  const t = new Date(
+    year.toString() +
+      '-' +
+      month.toString() +
+      '-' +
+      day.toString() +
+      ' 00:00:00',
+  ).getTime();
+  if (timeNumber >= t) return '今天';
+  if (timeNumber >= t - oneDayNumber) return '昨天';
+  if (timeNumber >= t - 2 * oneDayNumber) return '前天';
+  if (timeNumber >= t - 30 * oneDayNumber) return '近期';
+  return '较早';
 }
 
 function fromNow(time: Date | number, type: unknown) {
@@ -151,11 +180,17 @@ export async function RenderPug(
     getOriginLevel,
     cutContent,
     getProvinceCity,
+    hexToRgba,
     timeFormat,
+    anonymousInfo: {
+      username: '匿名用户',
+      avatar: '/default/default_anonymous_user_avatar.jpg',
+    },
     tools: {
       timeFormat,
       format,
       fromNow,
+      briefTime,
     },
 
     pretty: true,
