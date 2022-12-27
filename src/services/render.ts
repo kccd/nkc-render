@@ -173,6 +173,7 @@ export async function RenderPug(
       return isIncluded(includedModules, name);
     },
     objToStr,
+    briefNumber,
     format,
     fromNow,
     numToFloatTwo,
@@ -205,4 +206,11 @@ function isIncluded(data: {[propName: string]: boolean}, name: string) {
 
 function objToStr(obj: object) {
   return encodeURIComponent(JSON.stringify(obj));
+}
+function briefNumber(number: number) {
+  if (number < 10000) {
+    return number;
+  } else {
+    return (number / 10000).toFixed(1) + '万';
+  }
 }
