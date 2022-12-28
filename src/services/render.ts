@@ -5,6 +5,12 @@ import {HttpErrorCodes, HttpErrorTypes, ThrowHttpError} from '../modules/error';
 import hexToRgba from 'hex-to-rgba';
 const renderConfigs = GetRenderConfigs();
 import moment from 'moment';
+import MD from 'markdown-it';
+const md = new MD();
+
+function markdown(content: string) {
+  return md.render(content || '');
+}
 
 function format(type: string, time: Date | number) {
   type = type || 'YYYY/MM/DD HH:mm:ss';
@@ -116,7 +122,6 @@ function getProvinceCity(str: string) {
   const addressArr: string[] = str.split('/');
   let province = '';
   let city = '';
-  let address = '';
   if (addressArr[0]) {
     province = addressArr[0];
   }
@@ -127,8 +132,7 @@ function getProvinceCity(str: string) {
       city = city.substr(0, cityIndex);
     }
   }
-  address = province + '/' + city;
-  return address;
+  return province + '/' + city;
 }
 
 function getOriginLevel(index: number) {
@@ -182,6 +186,8 @@ export async function RenderPug(
     getProvinceCity,
     hexToRgba,
     timeFormat,
+    markdown,
+    markdown_safe: markdown,
     anonymousInfo: {
       username: '匿名用户',
       avatar: '/default/default_anonymous_user_avatar.jpg',
