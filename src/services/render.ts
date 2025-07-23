@@ -199,7 +199,7 @@ export async function RenderPug(
       fromNow,
       briefTime,
     },
-
+    objToBase64,
     pretty: true,
   });
 }
@@ -219,4 +219,9 @@ function briefNumber(number: number) {
   } else {
     return (number / 10000).toFixed(1) + '万';
   }
+}
+
+function objToBase64(data = {}) {
+  const dataString = JSON.stringify(data);
+  return Buffer.from(dataString || '').toString('base64');
 }
